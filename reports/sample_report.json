@@ -1,7 +1,10 @@
 {
-  "status": "example_format_only",
-  "model": "example-model",
+  "benchmark": "Yemeni Arabic LLM Evaluation Benchmark",
+  "status": "schema_example_only",
+  "model": null,
   "cases_evaluated": 0,
-  "aggregate": null,
-  "failure_counts": {}
+  "dimension_scores": {},
+  "failure_counts": {},
+  "reviewer_notes": [],
+  "warning": "No model result is claimed by this file."
 }

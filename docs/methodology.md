@@ -1,9 +1,16 @@
 # Methodology
 
-The benchmark evaluates LLM behavior in Yemeni Arabic and Yemeni conversational context. It is not intended to define one universal Yemeni dialect.
+## Stage 1 — Case construction
+Candidate cases cover everyday intents such as greetings, clarification, agreement, requests, thanks, price/location questions, and conversational closing.
 
-Each case should contain an ID, category, region/variety when known, register, prompt, reference notes, optional acceptable examples, and native-review status.
+## Stage 2 — Expert review
+Each candidate should be reviewed independently by multiple qualified Yemeni Arabic speakers. Reviewers should record region, age/context when relevant, disagreement, and preferred alternatives.
 
-Future production versions should use multiple Yemeni reviewers, preserve raw model outputs, record per-dimension scores and failure categories, and report both aggregate metrics and representative failures.
+## Stage 3 — Model evaluation
+For each model, run the same cases with the same prompt policy. Store the raw response, dimension scores, failure categories, reviewer notes, and evaluation timestamp.
 
-The current dataset is a small illustrative seed. It is not statistically representative.
+## Stage 4 — Reporting
+Report per-dimension means, failure-category frequency, reviewer agreement, and representative examples. Avoid treating a small seed set as representative of all Yemeni Arabic.
+
+## Limitations
+The included cases are a scaffold for human review, not a statistically validated corpus. Regional and sociolinguistic variation is expected. Quantitative model claims require a larger reviewed dataset and a documented annotation protocol.

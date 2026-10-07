@@ -1,23 +1,28 @@
 import argparse, json
-from evaluation.evaluator import DIMENSIONS, summarize
+from evaluation.evaluator import load_cases, validate_cases, score
 
-def validate(path):
-    n=0
-    with open(path, encoding="utf-8") as f:
-        for line_no,line in enumerate(f,1):
-            x=json.loads(line)
-            missing={"id","category","prompt","native_review_required"}-x.keys()
-            if missing: raise ValueError(f"Line {line_no}: missing {sorted(missing)}")
-            n+=1
-    print(f"Validated {n} cases.")
+parser = argparse.ArgumentParser(description="Yemeni Arabic LLM evaluation benchmark CLI")
+sub = parser.add_subparsers(dest="command", required=True)
 
-def main():
-    p=argparse.ArgumentParser()
-    s=p.add_subparsers(dest="command", required=True)
-    v=s.add_parser("validate"); v.add_argument("path")
-    q=s.add_parser("score"); q.add_argument("values", nargs=7, type=int)
-    a=p.parse_args()
-    if a.command=="validate": validate(a.path)
-    else: print(json.dumps(summarize(dict(zip(DIMENSIONS,a.values))), indent=2))
+p_validate = sub.add_parser("validate")
+p_validate.add_argument("path")
 
-if __name__=="__main__": main()
+p_summary = sub.add_parser("summary")
+p_summary.add_argument("path")
+
+p_score = sub.add_parser("score")
+p_score.add_argument("scores", nargs=7, type=int)
+
+args = parser.parse_args()
+
+if args.command == "validate":
+    count = validate_cases(load_cases(args.path))
+    print(f"Validated {count} cases.")
+elif args.command == "summary":
+    cases = load_cases(args.path)
+    validate_cases(cases)
+    intents = sorted({c["intent"] for c in cases})
+    risks = sorted({r for c in cases for r in c["risk_flags"]})
+    print(json.dumps({"cases": len(cases), "intents": len(intents), "risk_flags": risks}, ensure_ascii=False, indent=2))
+elif args.command == "score":
+    print(json.dumps(score(args.scores), indent=2))

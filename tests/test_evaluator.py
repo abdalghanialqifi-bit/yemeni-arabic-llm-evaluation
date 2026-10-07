@@ -1,9 +1,18 @@
-import unittest
-from evaluation.evaluator import DIMENSIONS, summarize
+import json, tempfile, unittest
+from evaluation.evaluator import load_cases, validate_cases, score
 
-class TestEvaluator(unittest.TestCase):
-    def test_perfect(self):
-        self.assertEqual(summarize({d:5 for d in DIMENSIONS})["average"],5.0)
-    def test_invalid(self):
-        x={d:5 for d in DIMENSIONS}; x["naturalness"]=6
-        with self.assertRaises(ValueError): summarize(x)
+class EvaluatorTests(unittest.TestCase):
+    def test_score(self):
+        result = score([5,4,4,5,4,4,5])
+        self.assertEqual(result["total"], 31)
+        self.assertEqual(result["max_total"], 35)
+        self.assertEqual(result["average"], 4.43)
+
+    def test_validate_dataset(self):
+        path = "datasets/seed_cases.jsonl"
+        cases = load_cases(path)
+        self.assertEqual(validate_cases(cases), 24)
+        self.assertEqual(len({c["id"] for c in cases}), 24)
+
+if __name__ == "__main__":
+    unittest.main()
